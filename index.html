@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia: Leyes de Kepler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            margin: 20px 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #score {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Trivia: Leyes de Kepler</h1>
+    <div class="container">
+        <div id="quiz"></div>
+        <button class="btn" onclick="nextQuestion()">Siguiente</button>
+        <div id="score"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "¿Cuántas leyes de Kepler hay?", options: ["1", "2", "3", "4"], answer: "3" },
+            { question: "¿Qué describe la primera ley de Kepler?", options: ["Órbitas elípticas", "Velocidad orbital", "Gravedad", "Semieje menor"], answer: "Órbitas elípticas" },
+            { question: "¿Qué forma tienen las órbitas según Kepler?", options: ["Circulares", "Elípticas", "Parabólicas", "Hipérbolas"], answer: "Elípticas" },
+            { question: "El Sol ocupa un:", options: ["Centro", "Foco", "Lado", "Semieje mayor"], answer: "Foco" },
+            { question: "¿Qué explica la segunda ley de Kepler?", options: ["Velocidad orbital", "Áreas barridas", "Gravedad", "Tiempo orbital"], answer: "Áreas barridas" },
+            { question: "¿Qué barre un planeta en tiempos iguales?", options: ["Áreas iguales", "Áreas distintas", "Perímetro", "Volumen"], answer: "Áreas iguales" },
+            { question: "¿Cómo varía la velocidad orbital?", options: ["Constante", "Aumenta cerca del Sol", "Disminuye cerca del Sol", "Siempre máxima"], answer: "Aumenta cerca del Sol" },
+            { question: "La tercera ley relaciona:", options: ["Período y semieje mayor", "Gravedad y velocidad", "Áreas y tiempo", "Fuerza y distancia"], answer: "Período y semieje mayor" },
+            { question: "¿El período orbital al cuadrado es proporcional a qué?", options: ["Semieje mayor al cubo", "Radio al cuadrado", "Área total", "Masa del planeta"], answer: "Semieje mayor al cubo" },
+            { question: "¿Qué significa perihelio?", options: ["Punto más cercano al Sol", "Punto más lejano al Sol", "Centro de la órbita", "Órbita circular"], answer: "Punto más cercano al Sol" },
+            { question: "¿Qué significa afelio?", options: ["Punto más lejano al Sol", "Punto más cercano al Sol", "Órbita más rápida", "Centro de la órbita"], answer: "Punto más lejano al Sol" },
+            { question: "¿Qué científico influyó en Kepler?", options: ["Copérnico", "Newton", "Einstein", "Hawking"], answer: "Copérnico" },
+            { question: "¿Qué estudió Kepler?", options: ["Movimiento planetario", "Física cuántica", "Átomos", "Energía nuclear"], answer: "Movimiento planetario" },
+            { question: "¿En qué año publicó Kepler su primera ley?", options: ["1609", "1509", "1709", "1809"], answer: "1609" },
+            { question: "¿Qué astrónomo proporcionó datos a Kepler?", options: ["Tycho Brahe", "Galileo Galilei", "Newton", "Ptolomeo"], answer: "Tycho Brahe" },
+            { question: "¿Qué planeta fue clave para Kepler?", options: ["Marte", "Venus", "Júpiter", "Saturno"], answer: "Marte" },
+            { question: "La segunda ley es conocida como:", options: ["Ley de áreas", "Ley de elipses", "Ley de proporciones", "Ley de velocidades"], answer: "Ley de áreas" },
+            { question: "La tercera ley conecta el movimiento orbital con:", options: ["La distancia al Sol", "El tiempo en días", "La inclinación orbital", "El volumen planetario"], answer: "La distancia al Sol" },
+            { question: "¿Qué libro famoso escribió Kepler?", options: ["Astronomía Nova", "Diálogo sobre los sistemas", "Principia Mathematica", "De Revolutionibus"], answer: "Astronomía Nova" },
+            { question: "¿Cuál es el movimiento descrito por Kepler?", options: ["Elíptico", "Rectilíneo", "Circular", "Parabólico"], answer: "Elíptico" },
+            { question: "La velocidad orbital es mayor en:", options: ["El perihelio", "El afelio", "El centro", "Siempre constante"], answer: "El perihelio" },
+            { question: "¿Qué propiedad es constante en una órbita?", options: ["Área barrida en tiempo igual", "Velocidad constante", "Forma circular", "Ángulo constante"], answer: "Área barrida en tiempo igual" },
+            { question: "La tercera ley también se conoce como:", options: ["Ley armónica", "Ley orbital", "Ley del tiempo", "Ley gravitacional"], answer: "Ley armónica" },
+            { question: "¿Qué unidades utiliza Kepler en la tercera ley?", options: ["Unidades astronómicas y años", "Kilómetros y segundos", "Millas y días", "Luz y meses"], answer: "Unidades astronómicas y años" },
+            { question: "La tercera ley ayuda a calcular:", options: ["La distancia entre planetas", "La masa del Sol", "La inclinación orbital", "El área barrida"], answer: "La distancia entre planetas" },
+            { question: "Kepler demostró que los planetas no se mueven en:", options: ["Círculos perfectos", "Elipses", "Parábolas", "Órbitas abiertas"], answer: "Círculos perfectos" },
+            { question: "¿Quién confirmó las leyes de Kepler mediante observación?", options: ["Newton", "Galileo", "Einstein", "Copérnico"], answer: "Galileo" },
+            { question: "¿Qué determina el semieje mayor?", options: ["El tamaño de la órbita", "La inclinación orbital", "La velocidad máxima", "El tiempo de perihelio"], answer: "El tamaño de la órbita" },
+            { question: "¿Cuánto tiempo tardó Kepler en descubrir sus leyes?", options: ["10 años", "20 años", "5 años", "1 año"], answer: "20 años" },
+            { question: "¿Qué relación tiene la gravedad con las leyes de Kepler?", options: ["Es la fuerza responsable", "No tiene relación", "Es perpendicular a la órbita", "Es menor en el afelio"], answer: "Es la fuerza responsable" },
+            { question: "Kepler colaboró con:", options: ["Tycho Brahe", "Isaac Newton", "Albert Einstein", "Galileo"], answer: "Tycho Brahe" },
+            { question: "¿Cuál es la importancia de las leyes de Kepler?", options: ["Fundamentan la mecánica celeste", "Explican la velocidad de la luz", "Son la base de la energía nuclear", "Son irrelevantes hoy"], answer: "Fundamentan la mecánica celeste" },
+            { question: "Kepler confirmó el modelo heliocéntrico:", options: ["Verdadero", "Falso"], answer: "Verdadero" },
+            { question: "¿Qué planeta tiene una órbita más excéntrica?", options: ["Mercurio", "Venus", "Marte", "Júpiter"], answer: "Mercurio" },
+            { question: "¿Qué planeta tiene el mayor semieje mayor?", options: ["Júpiter", "Saturno", "Neptuno", "Urano"], answer: "Júpiter" },
+            { question: "¿Qué significa que un planeta tenga una órbita excéntrica?", options: ["Su órbita es elíptica", "Su órbita es circular", "Su órbita es parabólica", "Su órbita no tiene forma definida"], answer: "Su órbita es elíptica" },
+            { question: "¿Qué instrumento usaba Tycho Brahe para observar las estrellas?", options: ["Un telescopio", "Un astrolabio", "Un microscopio", "Un sextante"], answer: "Un astrolabio" },
+            { question: "¿Qué observó Galileo que apoyó la teoría heliocéntrica?", options: ["Lunas de Júpiter", "Fases de Venus", "Anillos de Saturno", "Manchas solares"], answer: "Fases de Venus" },
+            { question: "Según Kepler, los planetas se mueven más rápido cuando están cerca de:", options: ["El Sol", "La Tierra", "El centro de la órbita", "El afelio"], answer: "El Sol" },
+            { question: "¿Qué forma de órbita predijo Kepler para los planetas?", options: ["Elíptica", "Circular", "Parabólica", "Hipérbolica"], answer: "Elíptica" },
+            { question: "La tercera ley de Kepler puede ser usada para calcular:", options: ["El período orbital de un planeta", "La masa de un planeta", "La distancia entre los planetas", "La velocidad de un planeta"], answer: "El período orbital de un planeta" },
+            { question: "¿En qué consiste la ley de Kepler sobre áreas barridas?", options: ["Un planeta barre áreas iguales en tiempos iguales", "La velocidad del planeta es constante en todo su camino", "La órbita de un planeta se mantiene constante", "La distancia del Sol al planeta es siempre la misma"], answer: "Un planeta barre áreas iguales en tiempos iguales" },
+            // Nuevas preguntas agregadas:
+            { question: "¿Qué planeta tiene el mayor ángulo de inclinación orbital?", options: ["Urano", "Neptuno", "Plutón", "Marte"], answer: "Urano" },
+            { question: "¿En qué se basan las leyes de Kepler?", options: ["Observaciones empíricas", "Teoría matemática", "Cálculos gravitacionales", "Suposiciones sobre el movimiento"], answer: "Observaciones empíricas" },
+            { question: "¿Qué fenómeno explica la tercera ley de Kepler?", options: ["El movimiento orbital de los planetas", "La relación entre el Sol y la Tierra", "La atracción gravitacional de los planetas", "El cambio de órbitas planetarias"], answer: "El movimiento orbital de los planetas" },
+            { question: "¿Qué planeta tiene la órbita más circular?", options: ["Venus", "La Tierra", "Mercurio", "Júpiter"], answer: "Venus" },
+            { question: "¿Cuál es el propósito de la primera ley de Kepler?", options: ["Explicar el movimiento de los planetas", "Describir la forma de las órbitas planetarias", "Relación entre el tiempo y la distancia", "Medir la velocidad orbital"], answer: "Describir la forma de las órbitas planetarias" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const quizDiv = document.getElementById('quiz');
+            const question = questions[currentQuestionIndex];
+            quizDiv.innerHTML = `
+                <div class="question">
+                    <p>${question.question}</p>
+                    <ul class="options">
+                        ${question.options.map(option => `<li><input type="radio" name="answer" value="${option}"> ${option}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (selectedOption) {
+                if (selectedOption.value === questions[currentQuestionIndex].answer) {
+                    score++;
+                }
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    document.getElementById('score').innerText = `Tu puntaje final es: ${score} de ${questions.length}`;
+                }
+            } else {
+                alert("Por favor selecciona una respuesta");
+            }
+        }
+
+        loadQuestion(); // Cargar la primera pregunta
+    </script>
+</body>
+</html>
